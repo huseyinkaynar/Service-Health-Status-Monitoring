@@ -6,15 +6,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class servicesController {
+public class ServicesController {
     private ServicesRepository servicesRepository;
 
-    public servicesController (ServicesRepository servicesRepository){this.servicesRepository=servicesRepository;}
-    @RequestMapping("/Services")
+    public ServicesController(ServicesRepository servicesRepository){this.servicesRepository=servicesRepository;}
+    @RequestMapping("/services")
     public String getServices(Model model){
 
-        model.addAttribute("Services", servicesRepository.findAll());
+        model.addAttribute("services", servicesRepository.findAll());
 
-        return "Services";
+        return "services";
     }
+
 }

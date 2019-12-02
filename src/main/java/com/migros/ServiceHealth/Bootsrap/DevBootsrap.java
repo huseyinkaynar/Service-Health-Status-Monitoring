@@ -19,8 +19,16 @@ public class DevBootsrap implements ApplicationListener<ContextRefreshedEvent> {
         initData();
     }
 
+
+
+
     private void initData(){
-        services.url a=new url;
+
+        services first1=new services();
+        first1.setServices("local11","23.02.1996","up");
+
+        servicesRepository.save(first1);
+
 
 
     }

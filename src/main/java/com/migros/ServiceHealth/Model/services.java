@@ -2,26 +2,30 @@ package com.migros.ServiceHealth.Model;
 
 
 import javax.persistence.*;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 
 @Entity
-@Table(name = "services")
 public class services {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String url;
-    private Date date;
+    private String  date;
     private  String status;
 
 
-
-     public services(String xyz, String xyz1, String xyz2){
+    public services(){
     }
-
+    public services(String url,String date,String status){
+        this.url=url;
+        this.date=date;
+        this.status=status;
+    }
 
     public Long getId() {
         return id;
@@ -39,8 +43,11 @@ public class services {
         this.url = url;
     }
 
+    public String getDate() {
+        return date;
+    }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -51,6 +58,14 @@ public class services {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public void setServices(String url,String date,String status){
+        this.url=url;
+        this.date=date;
+        this.status=status;
+    }
+
+
 
 
 
