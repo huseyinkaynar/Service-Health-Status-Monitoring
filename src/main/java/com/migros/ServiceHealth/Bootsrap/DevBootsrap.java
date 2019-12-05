@@ -25,7 +25,7 @@ public class DevBootsrap implements ApplicationListener<ContextRefreshedEvent> {
     private void initData(){
 
         services first1=new services();
-        first1.setServices("local11","23.02.1996","up");
+        first1.setServices("local12","23.02.1996","up");
 
         servicesRepository.save(first1);
 

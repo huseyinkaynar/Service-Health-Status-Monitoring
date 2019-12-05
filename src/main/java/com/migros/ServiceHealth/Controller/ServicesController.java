@@ -10,6 +10,7 @@ public class ServicesController {
     private ServicesRepository servicesRepository;
 
     public ServicesController(ServicesRepository servicesRepository){this.servicesRepository=servicesRepository;}
+
     @RequestMapping("/services")
     public String getServices(Model model){
 
@@ -17,5 +18,6 @@ public class ServicesController {
 
         return "services";
     }
+
 
 }
