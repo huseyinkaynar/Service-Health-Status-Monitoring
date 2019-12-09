@@ -1,27 +1,31 @@
 package com.migros.ServiceHealth.Model;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 
 @Entity
-public class services {
+@Table(name = "Services")
+public class Services {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column
     private String url;
-    private String  date;
+    @Column
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    private Date date;
+    @Column
     private  String status;
 
 
-    public services(){
+    public Services(){
     }
-    public services(String url,String date,String status){
+    public Services(String url, Date date, String status){
         this.url=url;
         this.date=date;
         this.status=status;
@@ -43,11 +47,11 @@ public class services {
         this.url = url;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
@@ -58,14 +62,4 @@ public class services {
     public void setStatus(String status) {
         this.status = status;
     }
-
-    public void setServices(String url,String date,String status){
-        this.url=url;
-        this.date=date;
-        this.status=status;
-    }
-
-
-
-
 }

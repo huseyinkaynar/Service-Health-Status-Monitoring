@@ -1,23 +1,45 @@
 package com.migros.ServiceHealth.Controller;
 
-import com.migros.ServiceHealth.Repositories.ServicesRepository;
+import com.migros.ServiceHealth.Model.Services;
+import com.migros.ServiceHealth.service.CheckStatusService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.List;
+
+@RestController
+@RequestMapping(value = "/services")
 public class ServicesController {
-    private ServicesRepository servicesRepository;
 
-    public ServicesController(ServicesRepository servicesRepository){this.servicesRepository=servicesRepository;}
+    @Autowired
+    CheckStatusService checkStatusService;
 
-    @RequestMapping("/services")
-    public String getServices(Model model){
+    @GetMapping("")
+    public List<Services> readServices(@RequestBody Services services){
+        return checkStatusService.allServices();
 
-        model.addAttribute("services", servicesRepository.findAll());
-
-        return "services";
     }
+
+
+    @PostMapping("")
+    public String createServices(@RequestBody Services services){
+
+        checkStatusService.saveService(services);
+       return "Saved";
+    }
+
+
+     @DeleteMapping("/{id}")
+     public String deleteServices(@PathVariable long id ){
+
+        checkStatusService.deleteService(id);
+        return "Deleted";
+     }
+
+
+
+
 
 
 }

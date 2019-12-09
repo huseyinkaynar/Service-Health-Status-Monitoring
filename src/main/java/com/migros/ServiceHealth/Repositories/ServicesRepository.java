@@ -1,8 +1,12 @@
 package com.migros.ServiceHealth.Repositories;
 
-import com.migros.ServiceHealth.Model.services;
-import org.springframework.data.repository.CrudRepository;
+import com.migros.ServiceHealth.Model.Services;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ServicesRepository extends CrudRepository<services,Long> {
+import java.util.Optional;
+
+public interface ServicesRepository extends JpaRepository<Services,Long> {
+
+    Optional<Services> findById(Long id);
 
 }
