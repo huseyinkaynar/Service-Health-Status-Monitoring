@@ -15,7 +15,7 @@ public class servicesDTO {
     @Id
     private long id;
     @NotEmpty
-    private String serviceUrl="http://www.omdbapi.com/?i=tt3896198&apikey=816468fd1";
+    private String serviceUrl="http://www.omdbapi.com/?i=tt3896198&apikey=816468fd";
     @NotEmpty
     private String serviceName;
     @NotNull

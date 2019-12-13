@@ -2,7 +2,6 @@ package com.migros.ServiceHealth.Model;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import sun.util.resources.cldr.st.CurrencyNames_st_LS;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -23,11 +22,15 @@ public class Services {
     @Column
     private  String status;
 
+   /* @ManyToOne
+    @JoinColumn(name = "urlId", nullable = false)
+    private  ServiceUrl serviceUrl;*/
+
+
 
     public Services(){
     }
     public Services(String url, Date date, String status){
-        this.url=url;
         this.date=date;
         this.status=status;
     }
@@ -65,4 +68,12 @@ public class Services {
     public void setStatus(String status) {
         this.status = status;
     }
+/*
+    public ServiceUrl getServiceUrl() {
+        return serviceUrl;
+    }
+
+    public void setServiceUrl(ServiceUrl serviceUrl) {
+        this.serviceUrl = serviceUrl;
+    }*/
 }
