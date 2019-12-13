@@ -2,6 +2,7 @@ package com.migros.ServiceHealth.Model;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import sun.util.resources.cldr.st.CurrencyNames_st_LS;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -30,6 +31,8 @@ public class Services {
         this.date=date;
         this.status=status;
     }
+
+
 
     public Long getId() {
         return id;

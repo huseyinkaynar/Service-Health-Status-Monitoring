@@ -3,6 +3,7 @@ package com.migros.ServiceHealth.Controller;
 import com.migros.ServiceHealth.Model.Services;
 import com.migros.ServiceHealth.service.CheckStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.health.Health;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,6 @@ public class ServicesController {
 
     }
 
-
     @PostMapping("")
     public String createServices(@RequestBody Services services){
 
@@ -36,6 +36,14 @@ public class ServicesController {
         checkStatusService.deleteService(id);
         return "Deleted";
      }
+
+    @GetMapping("/health")
+    public Health getHealth(){
+        return checkStatusService.health();
+
+    }
+
+
 
 
 
