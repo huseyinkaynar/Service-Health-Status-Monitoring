@@ -22,9 +22,7 @@ public class Services {
     @Column
     private  String status;
 
-   /* @ManyToOne
-    @JoinColumn(name = "urlId", nullable = false)
-    private  ServiceUrl serviceUrl;*/
+
 
 
 
@@ -68,12 +66,5 @@ public class Services {
     public void setStatus(String status) {
         this.status = status;
     }
-/*
-    public ServiceUrl getServiceUrl() {
-        return serviceUrl;
-    }
 
-    public void setServiceUrl(ServiceUrl serviceUrl) {
-        this.serviceUrl = serviceUrl;
-    }*/
 }

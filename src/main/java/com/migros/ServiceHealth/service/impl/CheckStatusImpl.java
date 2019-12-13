@@ -5,7 +5,6 @@ import com.migros.ServiceHealth.Model.servicesDTO;
 import com.migros.ServiceHealth.Repositories.ServicesRepository;
 import com.migros.ServiceHealth.service.CheckStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.http.*;
@@ -20,13 +19,12 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class CheckStatusImpl implements CheckStatusService ,HealthIndicator, CommandLineRunner{
+public class CheckStatusImpl implements CheckStatusService ,HealthIndicator{
 
 
     @Autowired
     ServicesRepository servicesRepository;
     servicesDTO servicesDTO=new servicesDTO();
-   // ServiceUrl serviceUrl=new ServiceUrl();
 
 
 
@@ -36,11 +34,7 @@ public class CheckStatusImpl implements CheckStatusService ,HealthIndicator, Com
 
     }
 
-   /* @Override
-    public void saveUrl(ServiceUrl serviceUrl) {
-        urlRepository.save(serviceUrl);
 
-    }*/
 
     @Override
     public void deleteService(long id) {
@@ -60,11 +54,6 @@ public class CheckStatusImpl implements CheckStatusService ,HealthIndicator, Com
 
         return servicesRepository.findAll();
     }
-   /* @Override
-    public List<ServiceUrl> allUrl() {
-
-        return urlRepository.findAll();
-    }*/
 
 
 
@@ -110,14 +99,8 @@ public class CheckStatusImpl implements CheckStatusService ,HealthIndicator, Com
             return Health.down().build();
 
         }
-       // addUrl(API_CHECK_URL);
         addServices(API_CHECK_URL,"down",date);
         return Health.down().build();
-    }
-
-    @Override
-    public void run(String... args) throws Exception {
-        health();
     }
 
 

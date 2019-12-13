@@ -39,12 +39,6 @@ public class ServicesController {
         return "Deleted";
      }
 
-    @GetMapping("/health")
-    public Health getHealth(){
-        return checkStatusService.health();
-
-    }
-
 
 
 
