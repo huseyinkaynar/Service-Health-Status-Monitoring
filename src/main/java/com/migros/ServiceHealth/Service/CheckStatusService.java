@@ -1,4 +1,4 @@
-package com.migros.ServiceHealth.service;
+package com.migros.ServiceHealth.Service;
 import com.migros.ServiceHealth.Model.Services;
 import org.springframework.boot.actuate.health.Health;
 

@@ -1,9 +1,9 @@
-package com.migros.ServiceHealth.service.impl;
+package com.migros.ServiceHealth.Service.impl;
 
 import com.migros.ServiceHealth.Model.Services;
-import com.migros.ServiceHealth.Model.servicesDTO;
+import com.migros.ServiceHealth.Model.ServicesDTO;
 import com.migros.ServiceHealth.Repositories.ServicesRepository;
-import com.migros.ServiceHealth.service.CheckStatusService;
+import com.migros.ServiceHealth.Service.CheckStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
@@ -24,7 +24,7 @@ public class CheckStatusImpl implements CheckStatusService ,HealthIndicator{
 
     @Autowired
     ServicesRepository servicesRepository;
-    servicesDTO servicesDTO=new servicesDTO();
+    ServicesDTO servicesDTO=new ServicesDTO();
 
 
 

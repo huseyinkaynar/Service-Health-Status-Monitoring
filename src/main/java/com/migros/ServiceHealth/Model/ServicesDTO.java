@@ -7,10 +7,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class servicesDTO {
+public class ServicesDTO {
     private long id;
 
-    private String serviceUrl="http://www.omdbapi.com/?i=tt3896198&apikey=816468fd1";
+    private String serviceUrl;
     private String serviceName;
     private long time;
 

@@ -1,12 +1,8 @@
 package com.migros.ServiceHealth.Controller;
 
 import com.migros.ServiceHealth.Model.Services;
-import com.migros.ServiceHealth.service.CheckStatusService;
+import com.migros.ServiceHealth.Service.CheckStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.health.Health;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.scheduling.annotation.Schedules;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
