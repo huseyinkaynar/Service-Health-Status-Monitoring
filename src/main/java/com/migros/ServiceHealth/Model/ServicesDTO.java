@@ -22,4 +22,5 @@ public class ServicesDTO {
         this.serviceUrl = serviceUrl;
     }
 
+
 }

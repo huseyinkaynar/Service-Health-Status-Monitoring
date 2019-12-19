@@ -1,8 +1,11 @@
 package com.migros.ServiceHealth.Controller;
 
 import com.migros.ServiceHealth.Model.Services;
+import com.migros.ServiceHealth.Model.ServicesDTO;
 import com.migros.ServiceHealth.Service.CheckStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,8 +18,8 @@ public class ServicesController {
     CheckStatusService checkStatusService;
 
     @GetMapping("")
-    public List<Services> readServices(@RequestBody Services services){
-        return checkStatusService.allServices();
+    public ResponseEntity<List> readServices(){
+        return new ResponseEntity<>(checkStatusService.allServices(), HttpStatus.OK);
 
     }
 
@@ -34,6 +37,12 @@ public class ServicesController {
         checkStatusService.deleteService(id);
         return "Deleted";
      }
+
+    @GetMapping("/url")
+    public ResponseEntity<List> readServicesName(){
+        return new ResponseEntity<>(checkStatusService.getServicesName(),HttpStatus.OK);
+
+    }
 
 
 

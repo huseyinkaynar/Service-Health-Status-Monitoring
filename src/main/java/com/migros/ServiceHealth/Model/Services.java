@@ -15,6 +15,8 @@ public class Services {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
+    private String name;
+    @Column
     private String url;
     @Column
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
@@ -28,7 +30,9 @@ public class Services {
 
     public Services(){
     }
-    public Services(String url, Date date, String status){
+    public Services(String name,String url, Date date, String status){
+        this.name=name;
+        this.url=url;
         this.date=date;
         this.status=status;
     }
@@ -49,6 +53,14 @@ public class Services {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Date getDate() {

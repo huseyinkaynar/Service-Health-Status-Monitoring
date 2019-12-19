@@ -54,12 +54,19 @@ public class CheckStatusImpl implements CheckStatusService ,HealthIndicator{
 
         return servicesRepository.findAll();
     }
+    @Override
+    public List<Services> getServicesName(){
+        return servicesRepository.findByName("actuator");
+
+
+    }
 
 
 
     @Override
-    public Object addServices(String url,String status, Date date) {
+    public Object addServices(String name,String url,String status, Date date) {
         Services services=new Services();
+        services.setName(name);
         services.setUrl(url);
         services.setDate(date);
         services.setStatus(status);
@@ -68,10 +75,12 @@ public class CheckStatusImpl implements CheckStatusService ,HealthIndicator{
     }
 
 
+
     @Override
     @Scheduled(fixedRate = 6000)
     public Health health() {
         final String API_CHECK_URL = servicesDTO.getServiceUrl();
+        final String ServiceName =servicesDTO.getServiceName();
 
 
         Date date=new Date();
@@ -83,7 +92,7 @@ public class CheckStatusImpl implements CheckStatusService ,HealthIndicator{
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.exchange(uri, HttpMethod.GET, entity, Object.class);
 
-            addServices(API_CHECK_URL,"up",date);
+            addServices(ServiceName,API_CHECK_URL,"up",date);
 
 
             return Health.up().build();
@@ -95,11 +104,11 @@ public class CheckStatusImpl implements CheckStatusService ,HealthIndicator{
 
         } catch (HttpClientErrorException e) {
 
-            addServices(API_CHECK_URL,"down",date);
+            addServices(ServiceName,API_CHECK_URL,"down",date);
             return Health.down().build();
 
         }
-        addServices(API_CHECK_URL,"down",date);
+        addServices(ServiceName,API_CHECK_URL,"down",date);
         return Health.down().build();
     }
 

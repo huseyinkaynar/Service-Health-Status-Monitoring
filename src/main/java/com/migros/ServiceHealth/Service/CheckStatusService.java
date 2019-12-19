@@ -10,8 +10,9 @@ public interface CheckStatusService {
     void deleteService(long id);
     void updateService(Services services);
     Health health();
-    Object addServices(String url,String status, Date date);
+    Object addServices(String name,String url,String status, Date date);
     List<Services> allServices();
+    List<Services> getServicesName();
 
 
 
