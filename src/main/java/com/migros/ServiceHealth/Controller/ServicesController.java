@@ -1,8 +1,8 @@
 package com.migros.ServiceHealth.Controller;
 
 import com.migros.ServiceHealth.Model.Services;
-import com.migros.ServiceHealth.Model.ServicesDTO;
-import com.migros.ServiceHealth.Service.CheckStatusService;
+
+import com.migros.ServiceHealth.Service.impl.CheckStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +16,9 @@ public class ServicesController {
 
     @Autowired
     CheckStatusService checkStatusService;
+
+
+
 
     @GetMapping("")
     public ResponseEntity<List> readServices(){

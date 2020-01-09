@@ -1,13 +1,17 @@
 package com.migros.ServiceHealth.Service.impl;
 
+import com.migros.ServiceHealth.Model.CheckServices;
 import com.migros.ServiceHealth.Model.Services;
 import com.migros.ServiceHealth.Model.ServicesDTO;
+import com.migros.ServiceHealth.Repositories.CheckServicesRepository;
 import com.migros.ServiceHealth.Repositories.ServicesRepository;
-import com.migros.ServiceHealth.Service.CheckStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.http.*;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -17,14 +21,33 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ScheduledFuture;
 
 @Service
-public class CheckStatusImpl implements CheckStatusService ,HealthIndicator{
+public class CheckStatusImpl implements CheckStatusService {
 
 
     @Autowired
     ServicesRepository servicesRepository;
     ServicesDTO servicesDTO=new ServicesDTO();
+    CheckServices checkServices=new CheckServices();
+    @Autowired
+    CheckServicesRepository checkServicesRepository;
+
+
+
+
+
+    @Override
+    public List<CheckServices> allCheckServices() {
+        return checkServicesRepository.findAll();
+    }
+
+    @Override
+    public void saveCheckService(CheckServices checkServices) {
+        checkServicesRepository.save(checkServices);
+
+    }
 
 
 
@@ -56,7 +79,7 @@ public class CheckStatusImpl implements CheckStatusService ,HealthIndicator{
     }
     @Override
     public List<Services> getServicesName(){
-        return servicesRepository.findByName("actuator");
+        return servicesRepository.findByName("services");
 
 
     }
@@ -75,13 +98,12 @@ public class CheckStatusImpl implements CheckStatusService ,HealthIndicator{
     }
 
 
-
+    @Scheduled(fixedRate = 5000 )
     @Override
-    @Scheduled(fixedRate = 6000)
-    public Health health() {
-        final String API_CHECK_URL = servicesDTO.getServiceUrl();
-        final String ServiceName =servicesDTO.getServiceName();
+    public Health a() {
 
+       final String API_CHECK_URL = servicesDTO.getServiceUrl();
+        final String ServiceName =servicesDTO.getServiceName();
 
         Date date=new Date();
         try {
@@ -110,7 +132,9 @@ public class CheckStatusImpl implements CheckStatusService ,HealthIndicator{
         }
         addServices(ServiceName,API_CHECK_URL,"down",date);
         return Health.down().build();
+
     }
+
 
 
 

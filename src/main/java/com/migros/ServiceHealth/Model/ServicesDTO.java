@@ -2,7 +2,7 @@ package com.migros.ServiceHealth.Model;
 
 import lombok.Getter;
 import lombok.Setter;
-
+import org.springframework.beans.factory.annotation.Value;
 
 
 @Getter
@@ -10,17 +10,11 @@ import lombok.Setter;
 public class ServicesDTO {
     private long id;
 
-    private String serviceUrl;
-    private String serviceName;
-    private long time;
+    private String serviceUrl="http://localhost:8080/actuator";
+    private String serviceName="actuator";
+    private int time=6000;
 
-    public String getServiceUrl() {
-        return serviceUrl;
-    }
 
-    public void setServiceUrl(String serviceUrl) {
-        this.serviceUrl = serviceUrl;
-    }
 
 
 }
