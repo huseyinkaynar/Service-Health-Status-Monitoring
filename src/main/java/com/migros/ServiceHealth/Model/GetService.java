@@ -10,17 +10,11 @@ import javax.persistence.*;
 @Table(name = "CheckServices")
 @Getter
 @Setter
-public class CheckServices {
+public class GetService {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
-    private String serviceName;
-    @Column
-    private String serviceUrl;
-    @Column
-    private String time;
-
-
+    private String getServiceName;
 }

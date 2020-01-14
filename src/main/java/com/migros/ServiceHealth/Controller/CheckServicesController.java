@@ -2,7 +2,7 @@ package com.migros.ServiceHealth.Controller;
 
 
 import com.migros.ServiceHealth.Model.CheckServices;
-import com.migros.ServiceHealth.Service.impl.CheckStatusService;
+import com.migros.ServiceHealth.Service.CheckStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +25,8 @@ public class CheckServicesController {
     @PostMapping("")
     public String createCheckServices(@RequestBody CheckServices checkServices){
 
-        //checkStatusService.a(checkServices.getServiceUrl(),checkServices.getServiceName());
         checkStatusService.saveCheckService(checkServices);
-        return "Saved";
+        return "Send";
     }
 
 
