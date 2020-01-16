@@ -20,7 +20,7 @@ public class CheckServices {
     @Column
     private String serviceUrl;
     @Column
-    private String time;
+    private long time;
 
 
 }

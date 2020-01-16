@@ -12,7 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.*;
 
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.TaskScheduler;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
@@ -24,15 +25,20 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class CheckStatusImpl implements CheckStatusService{
+public class CheckStatusImpl implements CheckStatusService {
 
 
+    private final TaskScheduler executor;
     @Autowired
     ServicesRepository servicesRepository;
     @Autowired
     CheckServicesRepository checkServicesRepository;
     @Autowired
     GetServiceRepository getServiceRepository;
+    @Autowired
+    public CheckStatusImpl(TaskScheduler taskExecutor) {
+        this.executor = taskExecutor;
+    }
 
 
 
@@ -101,13 +107,15 @@ public class CheckStatusImpl implements CheckStatusService{
 
 
     @Override
-    @Scheduled(fixedRate = 5000 )
-    public void checkServiceHealth()  {
-        List<CheckServices> serviceList=checkServicesRepository.findAll();
+    public void checkServiceHealth() {
+        List<CheckServices> serviceList=allCheckServices();
+
         serviceList.forEach((a)->{
 
             final String API_CHECK_URL =a.getServiceUrl();
             final String ServiceName =a.getServiceName();
+
+
 
             Date date=new Date();
             try {
@@ -131,9 +139,37 @@ public class CheckStatusImpl implements CheckStatusService{
                 addServices(ServiceName,API_CHECK_URL,"hatalı url",date);
 
             }
+
+
+
+
         });
 
+
+
     }
+    @Override
+    public void scheduling() {
+
+
+            Runnable task  = () -> checkServiceHealth();
+            executor.scheduleAtFixedRate(task,5000);
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+
+
+
 
 
 }
