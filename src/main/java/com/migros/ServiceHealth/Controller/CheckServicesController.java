@@ -23,11 +23,12 @@ public class CheckServicesController {
 
     }
     @PostMapping("")
-    public String createCheckServices(@RequestBody CheckServices checkServices){
-
+    public String createCheckServices(@RequestBody CheckServices checkServices /*,@RequestParam("time") long time*/){
+        checkStatusService.scheduling(checkServices.getTime());
         checkStatusService.saveCheckService(checkServices);
         return "Send";
     }
+
 
 
 

@@ -1,19 +1,20 @@
 package com.migros.ServiceHealth.Service.impl;
 
 import com.migros.ServiceHealth.Model.CheckServices;
-import com.migros.ServiceHealth.Model.GetService;
 import com.migros.ServiceHealth.Model.Services;
 import com.migros.ServiceHealth.Repositories.CheckServicesRepository;
-import com.migros.ServiceHealth.Repositories.GetServiceRepository;
 import com.migros.ServiceHealth.Repositories.ServicesRepository;
 import com.migros.ServiceHealth.Service.CheckStatusService;
-
+import com.migros.ServiceHealth.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.*;
 
 import org.springframework.scheduling.TaskScheduler;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
@@ -23,6 +24,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.List;
+
 
 @Service
 public class CheckStatusImpl implements CheckStatusService {
@@ -34,15 +36,21 @@ public class CheckStatusImpl implements CheckStatusService {
     @Autowired
     CheckServicesRepository checkServicesRepository;
     @Autowired
-    GetServiceRepository getServiceRepository;
-    @Autowired
     public CheckStatusImpl(TaskScheduler taskExecutor) {
         this.executor = taskExecutor;
     }
 
+    @Override
+    public Page<Services> getServicesPage(int pageNumber){
+        PageRequest pageable=PageRequest.of(pageNumber -1,5);
+        Page<Services> resultPage=servicesRepository.findAll(pageable);
+        if (pageNumber > resultPage.getTotalPages()){
 
+            throw new ResourceNotFoundException("Not Found Page Number"+pageNumber);
+        }
+        return resultPage;
 
-
+    }
 
 
     @Override
@@ -56,13 +64,14 @@ public class CheckStatusImpl implements CheckStatusService {
 
     }
 
+
+
+
     @Override
-    public void saveGetService(GetService getService) {
-        getServiceRepository.save(getService);
+    public List<Services> allServices() {
 
-
+        return servicesRepository.findAll();
     }
-
 
     @Override
     public void saveService(Services services) {
@@ -74,20 +83,6 @@ public class CheckStatusImpl implements CheckStatusService {
     @Override
     public void deleteService(long id) {
         servicesRepository.deleteById(id);
-
-    }
-
-
-    @Override
-    public List<Services> allServices() {
-
-        return servicesRepository.findAll();
-    }
-    @Override
-    public List<Services> getServicesName(){
-
-        return servicesRepository.findByName("actuator");
-
 
     }
 
@@ -107,6 +102,7 @@ public class CheckStatusImpl implements CheckStatusService {
 
 
     @Override
+    @Async
     public void checkServiceHealth() {
         List<CheckServices> serviceList=allCheckServices();
 
@@ -136,6 +132,7 @@ public class CheckStatusImpl implements CheckStatusService {
                 addServices(ServiceName,API_CHECK_URL,"down",date);
 
             }catch (ResourceAccessException e){
+
                 addServices(ServiceName,API_CHECK_URL,"hatalı url",date);
 
             }
@@ -149,25 +146,13 @@ public class CheckStatusImpl implements CheckStatusService {
 
     }
     @Override
-    public void scheduling() {
+    public void scheduling(long time) {
 
 
             Runnable task  = () -> checkServiceHealth();
-            executor.scheduleAtFixedRate(task,5000);
-
-
-
-
-
-
-
-
-
-
+            executor.scheduleAtFixedRate(task,time);
 
     }
-
-
 
 
 

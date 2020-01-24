@@ -1,15 +1,15 @@
 package com.migros.ServiceHealth.Controller;
 
-import com.migros.ServiceHealth.Model.GetService;
 import com.migros.ServiceHealth.Model.Services;
 
 import com.migros.ServiceHealth.Service.CheckStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 @RestController
@@ -27,6 +27,14 @@ public class ServicesController {
         return new ResponseEntity<>(checkStatusService.allServices(), HttpStatus.OK);
 
     }
+    @GetMapping("/page")
+    @ResponseBody
+    public ResponseEntity<List> findAllPaginated(@RequestParam("pageNumber") int pageNumber){
+
+        Page<Services> resultPage = checkStatusService.getServicesPage(pageNumber);
+        return new ResponseEntity<>(resultPage.getContent(),HttpStatus.OK);
+    }
+
 
 
     @PostMapping("")
@@ -44,11 +52,6 @@ public class ServicesController {
         return "Deleted";
      }
 
-    @GetMapping("/url")
-    public ResponseEntity<List> readServicesName(@RequestBody GetService getService){
-        return new ResponseEntity<>(checkStatusService.getServicesName(),HttpStatus.OK);
-
-    }
 
 
 
