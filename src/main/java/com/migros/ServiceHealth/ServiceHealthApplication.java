@@ -23,14 +23,7 @@ public class ServiceHealthApplication /*implements CommandLineRunner*/ {
 
 
 	}
-	/*@Override
-	public void run(String... args) {
 
-			checkStatusService.scheduling();
-
-
-
-	}*/
 
 
 }

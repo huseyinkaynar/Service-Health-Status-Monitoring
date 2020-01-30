@@ -4,12 +4,15 @@ import com.migros.ServiceHealth.Model.CheckServices;
 import com.migros.ServiceHealth.Model.Services;
 import com.migros.ServiceHealth.Repositories.CheckServicesRepository;
 import com.migros.ServiceHealth.Repositories.ServicesRepository;
+import com.migros.ServiceHealth.Service.AddServiceDb;
 import com.migros.ServiceHealth.Service.CheckStatusService;
 import com.migros.ServiceHealth.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.boot.actuate.health.Health;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 
 import org.springframework.scheduling.TaskScheduler;
@@ -29,25 +32,25 @@ import java.util.List;
 @Service
 public class CheckStatusImpl implements CheckStatusService {
 
-
     private final TaskScheduler executor;
+    public CheckStatusImpl(TaskScheduler taskExecutor) {
+        this.executor = taskExecutor;
+    }
+    @Autowired
+    AddServiceDb addServiceDb;
     @Autowired
     ServicesRepository servicesRepository;
     @Autowired
     CheckServicesRepository checkServicesRepository;
-    @Autowired
-    public CheckStatusImpl(TaskScheduler taskExecutor) {
-        this.executor = taskExecutor;
-    }
+
+
+
+
 
     @Override
-    public Page<Services> getServicesPage(int pageNumber){
-        PageRequest pageable=PageRequest.of(pageNumber -1,5);
+    public Page<Services> getServicesPage(Pageable pageable){
         Page<Services> resultPage=servicesRepository.findAll(pageable);
-        if (pageNumber > resultPage.getTotalPages()){
 
-            throw new ResourceNotFoundException("Not Found Page Number"+pageNumber);
-        }
         return resultPage;
 
     }
@@ -63,8 +66,6 @@ public class CheckStatusImpl implements CheckStatusService {
         checkServicesRepository.save(checkServices);
 
     }
-
-
 
 
     @Override
@@ -87,70 +88,49 @@ public class CheckStatusImpl implements CheckStatusService {
     }
 
 
-
-
     @Override
-    public Object addServices(String name,String url,String status, Date date) {
-        Services services=new Services();
-        services.setName(name);
-        services.setUrl(url);
-        services.setDate(date);
-        services.setStatus(status);
-        servicesRepository.save(services);
-        return "Saved.";
-    }
+    public void checkServiceHealth(CheckServices checkServices) {
+        final String API_CHECK_URL=checkServices.getServiceUrl();
+        final String ServiceName=checkServices.getServiceName();
+
+        Date date=new Date();
+        try {
+            URI uri = new URI(API_CHECK_URL);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<Object> entity = new HttpEntity<>(headers);
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.exchange(uri, HttpMethod.GET, entity, Object.class);
 
 
-    @Override
-    @Async
-    public void checkServiceHealth() {
-        List<CheckServices> serviceList=allCheckServices();
-
-        serviceList.forEach((a)->{
-
-            final String API_CHECK_URL =a.getServiceUrl();
-            final String ServiceName =a.getServiceName();
+            addServiceDb.addServices(ServiceName,API_CHECK_URL,"up",date);
 
 
 
-            Date date=new Date();
-            try {
-                URI uri = new URI(API_CHECK_URL);
-                HttpHeaders headers = new HttpHeaders();
-                headers.setContentType(MediaType.APPLICATION_JSON);
-                HttpEntity<Object> entity = new HttpEntity<>(headers);
-                RestTemplate restTemplate = new RestTemplate();
-                restTemplate.exchange(uri, HttpMethod.GET, entity, Object.class);
-
-                addServices(ServiceName,API_CHECK_URL,"up",date);
-
-
-            } catch (URISyntaxException e) {addServices(ServiceName,API_CHECK_URL,"down",date);
-
-            } catch (HttpClientErrorException e) {
-
-                addServices(ServiceName,API_CHECK_URL,"down",date);
-
-            }catch (ResourceAccessException e){
-
-                addServices(ServiceName,API_CHECK_URL,"hatalı url",date);
-
-            }
+        } catch (URISyntaxException | HttpClientErrorException e) {
+            addServiceDb.addServices(ServiceName,API_CHECK_URL,"down",date);
 
 
 
+        } catch (ResourceAccessException e){
 
-        });
+
+            addServiceDb.addServices(ServiceName,API_CHECK_URL,"hatalı url",date);
+
+        }
 
 
 
     }
+
+
+
     @Override
-    public void scheduling(long time) {
+    public void scheduling(CheckServices checkServices) {
 
 
-            Runnable task  = () -> checkServiceHealth();
-            executor.scheduleAtFixedRate(task,time);
+            Runnable task  = () -> checkServiceHealth(checkServices);
+            executor.scheduleAtFixedRate(task,checkServices.getTime());
 
     }
 
