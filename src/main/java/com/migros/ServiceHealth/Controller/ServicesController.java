@@ -3,6 +3,7 @@ package com.migros.ServiceHealth.Controller;
 import com.migros.ServiceHealth.Model.CheckServices;
 import com.migros.ServiceHealth.Model.Services;
 
+import com.migros.ServiceHealth.Repositories.ServicesRepository;
 import com.migros.ServiceHealth.Service.CheckStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.health.Health;
@@ -21,6 +22,8 @@ public class ServicesController {
 
     @Autowired
     CheckStatusService checkStatusService;
+    @Autowired
+    ServicesRepository servicesRepository;
 
 
 
@@ -30,6 +33,17 @@ public class ServicesController {
         return new ResponseEntity<>(checkStatusService.allServices(), HttpStatus.OK);
 
     }
+    @GetMapping("search")
+    public Page<Services> findaServiceName(
+            @RequestParam("name") String name,
+            Pageable pageable){
+
+
+        return servicesRepository.findByName(name, pageable);
+
+
+    }
+
     @GetMapping("/page")
     @ResponseBody
     public ResponseEntity<Page> findAllPaginated(Pageable pageable){
