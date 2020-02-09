@@ -4,20 +4,15 @@ import com.migros.ServiceHealth.Model.CheckServices;
 import com.migros.ServiceHealth.Model.Services;
 import com.migros.ServiceHealth.Repositories.CheckServicesRepository;
 import com.migros.ServiceHealth.Repositories.ServicesRepository;
-import com.migros.ServiceHealth.Service.AddServiceDb;
 import com.migros.ServiceHealth.Service.CheckStatusService;
-import com.migros.ServiceHealth.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.boot.actuate.health.Health;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 
 import org.springframework.scheduling.TaskScheduler;
 
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
@@ -36,8 +31,7 @@ public class CheckStatusImpl implements CheckStatusService {
     public CheckStatusImpl(TaskScheduler taskExecutor) {
         this.executor = taskExecutor;
     }
-    @Autowired
-    AddServiceDb addServiceDb;
+
     @Autowired
     ServicesRepository servicesRepository;
     @Autowired
@@ -49,11 +43,31 @@ public class CheckStatusImpl implements CheckStatusService {
 
     @Override
     public Page<Services> getServicesPage(Pageable pageable){
-        Page<Services> resultPage=servicesRepository.findAll(pageable);
 
-        return resultPage;
+        return servicesRepository.findAll(pageable);
 
     }
+    @Override
+    public Page<Services> getSearchServicesPage(String name,Pageable pageable){
+
+        return servicesRepository.findByName(name, pageable);
+
+    }
+
+    @Override
+    public void saveService(Services services) {
+        servicesRepository.save(services);
+
+    }
+
+    @Override
+    public void deleteService(long id) {
+        servicesRepository.deleteById(id);
+
+    }
+
+
+
 
 
     @Override
@@ -68,25 +82,18 @@ public class CheckStatusImpl implements CheckStatusService {
     }
 
 
-    @Override
-    public List<Services> allServices() {
 
-        return servicesRepository.findAll();
-    }
 
     @Override
-    public void saveService(Services services) {
+    public void addServices(String name, String url, String status, Date date) {
+        Services services=new Services();
+        services.setName(name);
+        services.setUrl(url);
+        services.setDate(date);
+        services.setStatus(status);
         servicesRepository.save(services);
 
     }
-
-
-    @Override
-    public void deleteService(long id) {
-        servicesRepository.deleteById(id);
-
-    }
-
 
     @Override
     public void checkServiceHealth(CheckServices checkServices) {
@@ -102,20 +109,19 @@ public class CheckStatusImpl implements CheckStatusService {
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.exchange(uri, HttpMethod.GET, entity, Object.class);
 
-
-            addServiceDb.addServices(ServiceName,API_CHECK_URL,"up",date);
+            addServices(ServiceName,API_CHECK_URL,"up",date);
 
 
 
         } catch (URISyntaxException | HttpClientErrorException e) {
-            addServiceDb.addServices(ServiceName,API_CHECK_URL,"down",date);
+            addServices(ServiceName,API_CHECK_URL,"down",date);
 
 
 
         } catch (ResourceAccessException e){
 
 
-            addServiceDb.addServices(ServiceName,API_CHECK_URL,"hatalı url",date);
+            addServices(ServiceName,API_CHECK_URL,"hatalı url",date);
 
         }
 
