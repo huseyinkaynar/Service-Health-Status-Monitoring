@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Table(name = "CheckServices")
 @Getter
 @Setter
-public class CheckServices {
+public class CheckServicesModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

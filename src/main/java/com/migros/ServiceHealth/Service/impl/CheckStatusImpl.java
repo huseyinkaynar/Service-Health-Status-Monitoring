@@ -1,7 +1,7 @@
 package com.migros.ServiceHealth.Service.impl;
 
-import com.migros.ServiceHealth.Model.CheckServices;
-import com.migros.ServiceHealth.Model.Services;
+import com.migros.ServiceHealth.Model.CheckServicesModel;
+import com.migros.ServiceHealth.Model.ServicesModel;
 import com.migros.ServiceHealth.Repositories.CheckServicesRepository;
 import com.migros.ServiceHealth.Repositories.ServicesRepository;
 import com.migros.ServiceHealth.Service.CheckStatusService;
@@ -42,21 +42,25 @@ public class CheckStatusImpl implements CheckStatusService {
 
 
     @Override
-    public Page<Services> getServicesPage(Pageable pageable){
+    public Page<ServicesModel> getServicesPage(Pageable pageable){
 
         return servicesRepository.findAll(pageable);
 
     }
+    public List<ServicesModel> allServices() {
+        return servicesRepository.findAll();
+    }
+
     @Override
-    public Page<Services> getSearchServicesPage(String name,Pageable pageable){
+    public Page<ServicesModel> getSearchServicesPage(String name, Pageable pageable){
 
         return servicesRepository.findByName(name, pageable);
 
     }
 
     @Override
-    public void saveService(Services services) {
-        servicesRepository.save(services);
+    public void saveService(ServicesModel servicesModel) {
+        servicesRepository.save(servicesModel);
 
     }
 
@@ -71,13 +75,13 @@ public class CheckStatusImpl implements CheckStatusService {
 
 
     @Override
-    public List<CheckServices> allCheckServices() {
+    public List<CheckServicesModel> allCheckServices() {
         return checkServicesRepository.findAll();
     }
 
     @Override
-    public void saveCheckService(CheckServices checkServices) {
-        checkServicesRepository.save(checkServices);
+    public void saveCheckService(CheckServicesModel checkServicesModel) {
+        checkServicesRepository.save(checkServicesModel);
 
     }
 
@@ -86,19 +90,19 @@ public class CheckStatusImpl implements CheckStatusService {
 
     @Override
     public void addServices(String name, String url, String status, Date date) {
-        Services services=new Services();
-        services.setName(name);
-        services.setUrl(url);
-        services.setDate(date);
-        services.setStatus(status);
-        servicesRepository.save(services);
+        ServicesModel servicesModel =new ServicesModel();
+        servicesModel.setName(name);
+        servicesModel.setUrl(url);
+        servicesModel.setDate(date);
+        servicesModel.setStatus(status);
+        servicesRepository.save(servicesModel);
 
     }
 
     @Override
-    public void checkServiceHealth(CheckServices checkServices) {
-        final String API_CHECK_URL=checkServices.getServiceUrl();
-        final String ServiceName=checkServices.getServiceName();
+    public void checkServiceHealth(CheckServicesModel checkServicesModel) {
+        final String API_CHECK_URL= checkServicesModel.getServiceUrl();
+        final String ServiceName= checkServicesModel.getServiceName();
 
         Date date=new Date();
         try {
@@ -132,11 +136,11 @@ public class CheckStatusImpl implements CheckStatusService {
 
 
     @Override
-    public void scheduling(CheckServices checkServices) {
+    public void scheduling(CheckServicesModel checkServicesModel) {
 
 
-            Runnable task  = () -> checkServiceHealth(checkServices);
-            executor.scheduleAtFixedRate(task,checkServices.getTime());
+            Runnable task  = () -> checkServiceHealth(checkServicesModel);
+            executor.scheduleAtFixedRate(task, checkServicesModel.getTime());
 
     }
 
