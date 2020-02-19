@@ -8,6 +8,8 @@
 		<version>2.2.2.BUILD-SNAPSHOT</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
+
 	<groupId>com.migros</groupId>
 	<artifactId>ServiceHealth</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
