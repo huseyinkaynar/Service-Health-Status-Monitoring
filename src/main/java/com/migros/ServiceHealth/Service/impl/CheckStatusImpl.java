@@ -18,6 +18,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Date;
@@ -28,18 +29,18 @@ import java.util.List;
 public class CheckStatusImpl implements CheckStatusService {
 
     private final TaskScheduler executor;
+
+
     public CheckStatusImpl(TaskScheduler taskExecutor) {
+
         this.executor = taskExecutor;
     }
+
 
     @Autowired
     ServicesRepository servicesRepository;
     @Autowired
     CheckServicesRepository checkServicesRepository;
-
-
-
-
 
     @Override
     public Page<ServicesModel> getServicesPage(Pageable pageable){
@@ -51,12 +52,7 @@ public class CheckStatusImpl implements CheckStatusService {
         return servicesRepository.findAll();
     }
 
-    @Override
-    public Page<ServicesModel> getSearchServicesPage(String name, Pageable pageable){
 
-        return servicesRepository.findByName(name, pageable);
-
-    }
 
     @Override
     public void saveService(ServicesModel servicesModel) {
@@ -70,10 +66,6 @@ public class CheckStatusImpl implements CheckStatusService {
 
     }
 
-
-
-
-
     @Override
     public List<CheckServicesModel> allCheckServices() {
         return checkServicesRepository.findAll();
@@ -84,8 +76,11 @@ public class CheckStatusImpl implements CheckStatusService {
         checkServicesRepository.save(checkServicesModel);
 
     }
+    @Override
+    public Page<ServicesModel> getSearchServices(String name,Pageable pageable) {
 
-
+        return servicesRepository.findByNameQuery(name,pageable);
+    }
 
 
     @Override
@@ -103,6 +98,9 @@ public class CheckStatusImpl implements CheckStatusService {
     public void checkServiceHealth(CheckServicesModel checkServicesModel) {
         final String API_CHECK_URL= checkServicesModel.getServiceUrl();
         final String ServiceName= checkServicesModel.getServiceName();
+
+
+
 
         Date date=new Date();
         try {
@@ -125,13 +123,10 @@ public class CheckStatusImpl implements CheckStatusService {
         } catch (ResourceAccessException e){
 
 
-            addServices(ServiceName,API_CHECK_URL,"hatalı url",date);
-
         }
 
-
-
     }
+
 
 
 
@@ -143,8 +138,6 @@ public class CheckStatusImpl implements CheckStatusService {
             executor.scheduleAtFixedRate(task, checkServicesModel.getTime());
 
     }
-
-
 
 
 }

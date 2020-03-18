@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "CheckServices")
@@ -15,12 +16,13 @@ public class CheckServicesModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
+    @NotNull
     private String serviceName;
-    @Column
+    @NotNull
     private String serviceUrl;
-    @Column
+    @NotNull
     private long time;
+
 
 
 }

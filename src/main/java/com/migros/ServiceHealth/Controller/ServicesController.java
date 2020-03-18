@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 @RequestMapping(value = "/services")
 public class ServicesController {
@@ -40,12 +41,14 @@ public class ServicesController {
         return "Deleted";
      }
 
-    @GetMapping("/search")
-    public ResponseEntity<Page> findaServiceName( @RequestParam("name") String name,
-                                                  Pageable pageable){
 
-        Page<ServicesModel> searchPage = checkStatusService.getSearchServicesPage(name, pageable);
+    @GetMapping("/search")
+    @ResponseBody
+    public ResponseEntity<Page> searchServiceNameQuery(@RequestParam(value = "name") String name, Pageable pageable) {
+
+        Page<ServicesModel> searchPage = checkStatusService.getSearchServices(name, pageable);
         return new ResponseEntity<>(searchPage,HttpStatus.OK);
+
 
     }
 

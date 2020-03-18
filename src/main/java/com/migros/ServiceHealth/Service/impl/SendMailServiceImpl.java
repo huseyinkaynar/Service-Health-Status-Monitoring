@@ -54,7 +54,6 @@ public class SendMailServiceImpl implements SendMailService {
             all.add(new ArrayList<>(Arrays.asList(a.getName(), a.getUrl(),a.getStatus(),a.getDate().toString())));
 
         });
-        System.out.println(all);
 
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);

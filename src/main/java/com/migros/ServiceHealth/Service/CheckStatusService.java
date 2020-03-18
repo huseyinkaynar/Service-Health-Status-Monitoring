@@ -15,9 +15,9 @@ public interface CheckStatusService {
     void scheduling(CheckServicesModel checkServicesModel);
     void addServices(String name,String url,String status, Date date);
 
+    Page<ServicesModel> getSearchServices(String name,Pageable pageable);
     List<CheckServicesModel> allCheckServices();
     Page<ServicesModel> getServicesPage(Pageable pageable);
-    Page<ServicesModel> getSearchServicesPage(String name, Pageable pageable);
     List<ServicesModel> allServices();
 
 
